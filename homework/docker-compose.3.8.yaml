@@ -1,35 +1,44 @@
-version: '2.4'
+version: '3.8'
 services:
 
   nginx:
     restart: "no"
     image: localhost:5000/homework_nginx:latest
     container_name: nginx_app
-    cpu_count: 1
-    cpus: 0.1
-    cpu_percent: 10
-    mem_limit: 50m
     volumes:
       - app-data:/usr/share/nginx/html
     ports:
       - "8080:80"
     networks:
       - nginx-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
 
   apache:
     restart: "no"
     image: localhost:5000/homework_apache:latest
     container_name: apache_app
-    cpu_count: 1
-    cpus: 0.1
-    cpu_percent: 10
-    mem_limit: 50m
     volumes:
       - app-data:/usr/local/apache2/htdocs
     ports:
       - "8090:80"
     networks:
      - apache-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+
 
 networks:
   apache-network:
