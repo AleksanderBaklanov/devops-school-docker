@@ -20,8 +20,8 @@ docker build -t homework_apache -f ./apache/Dockerfile .
 # homework_nginx                                                    latest              3aaad4b8026b        16 minutes ago      23.5MB
 
 # create additional tags for pushing to the local registry
-docker tag 3aaad4b8026b localhost:5000/homework_nginx:latest
-docker tag e10e6510c103 localhost:5000/homework_apache:latest
+docker tag homework_nginx localhost:5000/homework_nginx:latest
+docker tag homework_apache localhost:5000/homework_apache:latest
 
 ## >docker images
 # REPOSITORY                                                        TAG                 IMAGE ID            CREATED             SIZE

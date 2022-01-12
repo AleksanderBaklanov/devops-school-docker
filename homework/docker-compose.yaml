@@ -11,6 +11,14 @@ services:
       - "8080:80"
     networks:
       - nginx-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
 
   apache:
     restart: "no"
@@ -22,6 +30,15 @@ services:
       - "8090:80"
     networks:
      - apache-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+
 
 networks:
   apache-network:
