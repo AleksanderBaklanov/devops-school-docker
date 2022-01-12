@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+
+  nginx:
+    restart: "no"
+    image: localhost:5000/homework_nginx:latest
+    container_name: nginx_app
+    volumes:
+      - app-data:/usr/share/nginx/html
+    ports:
+      - "8080:80"
+    networks:
+      - nginx-network
+
+  apache:
+    restart: "no"
+    image: localhost:5000/homework_apache:latest
+    container_name: apache_app
+    volumes:
+      - app-data:/usr/local/apache2/htdocs
+    ports:
+      - "8090:80"
+    networks:
+     - apache-network
+
+networks:
+  apache-network:
+    external: true
+  nginx-network:
+    external: true
+
+volumes:
+  app-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./app/2048
