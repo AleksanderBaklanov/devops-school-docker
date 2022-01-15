@@ -31,6 +31,7 @@ services:
     ports:
       - "3000:3000"
     networks:
+      - catalog-external
       - catalog-internal
     depends_on:
       - backend
@@ -47,6 +48,7 @@ services:
     ports:
       - "8000:8000"
     networks:
+      - catalog-external
       - catalog-internal
     depends_on:
       - database
@@ -71,3 +73,5 @@ networks:
     name: catalog-internai
     driver: bridge
     internal: true
+
+
