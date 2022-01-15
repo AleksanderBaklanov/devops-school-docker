@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/homework/app/2048" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/homework2/docker_homework" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/homework2/ts-express-sample" vcs="Git" />
+  </component>
+</project>

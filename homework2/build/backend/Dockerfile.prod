@@ -1,0 +1,51 @@
+FROM python:3.7.4-alpine3.10 as builder
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apk update && \
+    apk add postgresql-dev gcc python3-dev musl-dev
+
+# lint
+RUN pip install --upgrade pip
+RUN pip install flake8==3.7.4
+COPY ./docker_homework/lib_catalog ./
+COPY ./docker_homework/node_modules ./
+RUN flake8 --ignore=E501,F401 .
+
+# install dependencies
+ENV VIRTUAL_ENV=/app/venv
+RUN python -m venv $VIRTUAL_ENV && pip install --upgrade pip
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
+
+
+
+FROM python:3.9.6-alpine
+LABEL maintaner="Aleksandr Baklanov <Aleksandr_Baklanov@epam.com>"
+
+RUN mkdir -p /home/app
+RUN addgroup -S app && adduser -S app -G app
+
+ENV HOME=/home/app
+ENV APP_HOME=/home/app/web
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+RUN apk update && apk add libpq
+COPY --from=builder /app/wheels /wheels
+COPY --from=builder /app/requirements.txt .
+RUN pip install --no-cache /wheels/*
+
+COPY ./build/backend/entrypoint.sh .
+RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.sh
+RUN chmod +x  $APP_HOME/entrypoint.sh
+
+COPY --from=builder --chown=app:app /app $APP_HOME
+RUN chown -R  $APP_HOME
+
+USER app
+
+ENTRYPOINT ["/home/app/entrypoint.sh"]

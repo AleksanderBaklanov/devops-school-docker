@@ -1,0 +1,73 @@
+version: '2.4'
+services:
+
+  proxy:
+    restart: "no"
+    build:
+      context: .
+      dockerfile: build/proxy/Dockerfile
+    container_name: proxy
+#    network_mode: "host"
+    ports:
+      - "80:80"
+    networks:
+      - catalog-external
+      - catalog-internal
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    restart: "no"
+    build:
+      context: .
+      dockerfile: build/frontend/Dockerfile
+    container_name: frontend
+#    network_mode: "host"
+    command: npm start run --host 0.0.0.0:3000
+    stdin_open: true
+    env_file:
+      - .env_front
+    ports:
+      - "3000:3000"
+    networks:
+      - catalog-internal
+    depends_on:
+      - backend
+
+  backend:
+    restart: always
+    build:
+      context: .
+      dockerfile: build/backend/Dockerfile
+    container_name: backend
+    command: bash entrypoint.sh
+    env_file:
+      - .env_back
+    ports:
+      - "8000:8000"
+    networks:
+      - catalog-internal
+    depends_on:
+      - database
+
+  database:
+    restart: always
+    image: postgres:12.9-alpine
+    container_name: database
+    env_file:
+      - .env_db
+    ports:
+      - "5432:5432"
+    networks:
+      - catalog-internal
+
+networks:
+  catalog-external:
+    name: catalog-external
+    driver: bridge
+    external: true
+  catalog-internal:
+    name: catalog-internai
+    driver: bridge
+    internal: true
