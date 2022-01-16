@@ -9,13 +9,13 @@ then
 
     while [[ ! $(echo -e '\x1dclose\x0d' | telnet $DATABASE_HOST 5432 | grep Connected) == *"Connected"* ]]
     do
-        sleep 1
+        sleep 0.5
     done
 
     echo "PostgreSQL started"
 fi
 
-sleep 5
+sleep 1
 python3 manage.py makemigrations
 python3 manage.py migrate
 
@@ -39,7 +39,6 @@ python3 manage.py createsuperuser \
     --email $DJANGO_SUPERUSER_EMAIL
 
 # load data
-python3 parse_docx.py
 python3  manage.py loaddata catalog/fixtures/bbk_data.json
 
 python3 manage.py runserver 0.0.0.0:8000

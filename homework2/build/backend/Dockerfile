@@ -3,8 +3,7 @@
 RUN apt-get update -y && apt-get install -y apt-utils
 
 WORKDIR /app
-COPY ./docker_homework/lib_catalog ./
-COPY ./docker_homework/node_modules ./
+COPY ./docker_homework/* ./
 COPY ./build/backend/entrypoint.sh /app/entrypoint.sh
 
 ENV VIRTUAL_ENV=/app/venv

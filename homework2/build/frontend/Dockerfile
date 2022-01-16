@@ -1,8 +1,7 @@
 FROM node:12-alpine as build
 RUN mkdir -p /app
 WORKDIR /app
-COPY ./docker_homework/frontend /app
-COPY ./docker_homework/node_modules /app/node_modules
+COPY ./docker_homework/* /app/
 
 RUN npm install --save-dev
 RUN npm build && \

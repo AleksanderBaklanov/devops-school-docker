@@ -7,7 +7,6 @@ services:
       context: .
       dockerfile: build/proxy/Dockerfile
     container_name: proxy
-#    network_mode: "host"
     ports:
       - "80:80"
     networks:
@@ -23,15 +22,13 @@ services:
       context: .
       dockerfile: build/frontend/Dockerfile
     container_name: frontend
-#    network_mode: "host"
     command: npm start run --host 0.0.0.0:3000
     stdin_open: true
-    env_file:
-      - .env_front
+    environment:
+      - CI=true
     ports:
       - "3000:3000"
     networks:
-      - catalog-external
       - catalog-internal
     depends_on:
       - backend
@@ -44,11 +41,10 @@ services:
     container_name: backend
     command: bash entrypoint.sh
     env_file:
-      - .env_back
+      - .env
     ports:
       - "8000:8000"
     networks:
-      - catalog-external
       - catalog-internal
     depends_on:
       - database
@@ -58,7 +54,7 @@ services:
     image: postgres:12.9-alpine
     container_name: database
     env_file:
-      - .env_db
+      - .env
     ports:
       - "5432:5432"
     networks:
