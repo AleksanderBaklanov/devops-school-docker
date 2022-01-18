@@ -2,20 +2,6 @@
 cd /app
 . ./venv/bin/activate
 
-# Check if the Database has arrived
-if [ "$DATABASE_ENGINE" = "postgresql" ]
-then
-    echo "Waiting for postgres..."
-
-    while [[ ! $(echo -e '\x1dclose\x0d' | telnet $DATABASE_HOST 5432 | grep Connected) == *"Connected"* ]]
-    do
-        sleep 0.5
-    done
-
-    echo "PostgreSQL started"
-fi
-
-sleep 1
 python3 manage.py makemigrations
 python3 manage.py migrate
 

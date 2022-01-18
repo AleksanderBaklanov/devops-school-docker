@@ -9,7 +9,6 @@ RUN npm build && \
 
 
 FROM node:12-alpine
-RUN apk add busybox-extras
 WORKDIR /app
 USER node
 COPY --from=build --chown=node:node /app ./
